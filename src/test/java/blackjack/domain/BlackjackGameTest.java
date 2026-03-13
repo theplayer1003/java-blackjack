@@ -7,6 +7,8 @@ import static org.mockito.Mockito.verify;
 
 import blackjack.domain.card.Card;
 import blackjack.domain.card.Deck;
+import blackjack.domain.card.NumberRank;
+import blackjack.domain.card.Suit;
 import blackjack.domain.player.Player;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +29,8 @@ public class BlackjackGameTest {
     private BlackjackGame blackjackGame;
 
     @Test
-    void start_DistributesTwoCardsToEachParticipant(){
-        Card dummyCard = new Card("dummy_rank", "dummy_suit");
+    void start_DistributesTwoCardsToEachParticipant() {
+        Card dummyCard = new Card(new NumberRank(2), Suit.HEART);
         given(deck.draw()).willReturn(dummyCard);
 
         blackjackGame.start();

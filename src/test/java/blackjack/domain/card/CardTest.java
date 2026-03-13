@@ -9,26 +9,24 @@ import org.junit.jupiter.api.Test;
 class CardTest {
 
     @Test
-    void getRankName() {
-        Card card = new Card("2", "하트");
+    void getRankName_Always_ReturnsDelegatedRankDisplayName() {
+        Card card = new Card(new NumberRank(2), Suit.HEART);
 
         assertThat(card.getRankName()).isEqualTo("2");
     }
 
     @Test
-    void getSuitName() {
-        Card card = new Card("2", "하트");
+    void getSuitName_Always_ReturnsDelegatedSuitDisplayName() {
+        Card card = new Card(new NumberRank(2), Suit.HEART);
 
         assertThat(card.getSuitName()).isEqualTo("하트");
     }
 
     @Test
-    void getScore_Ace_ReturnDynamicScoreBasedOnBoundary() {
-        Card card = new Card("A", "하트");
-        int currentTotalScore10 = 10;
-        int currentTotalScore11 = 11;
+    void getScore_Always_ReturnsDelegatedRankScore() {
+        Card card = new Card(new NumberRank(10), Suit.HEART);
+        int anyCurrentTotalScore = 15;
 
-        assertThat(card.getScore(currentTotalScore10)).isEqualTo(11);
-        assertThat(card.getScore(currentTotalScore11)).isEqualTo(1);
+        assertThat(card.getScore(anyCurrentTotalScore)).isEqualTo(10);
     }
 }
