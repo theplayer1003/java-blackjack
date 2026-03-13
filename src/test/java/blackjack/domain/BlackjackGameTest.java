@@ -28,7 +28,7 @@ public class BlackjackGameTest {
 
     @Test
     void start_DistributesTwoCardsToEachParticipant(){
-        Card dummyCard = new Card();
+        Card dummyCard = new Card("dummy_rank", "dummy_suit");
         given(deck.draw()).willReturn(dummyCard);
 
         blackjackGame.start();
