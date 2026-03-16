@@ -9,7 +9,7 @@ import blackjack.domain.card.Card;
 import blackjack.domain.card.Deck;
 import blackjack.domain.card.NumberRank;
 import blackjack.domain.card.Suit;
-import blackjack.domain.player.Player;
+import blackjack.domain.player.Participant;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ public class BlackjackGameTest {
     private Deck deck;
 
     @Mock
-    private Player player;
+    private Participant participant;
 
     @InjectMocks
     private BlackjackGame blackjackGame;
@@ -39,7 +39,7 @@ public class BlackjackGameTest {
         then(deck).should(times(2)).draw();
 
         //verify(player, times(2)).receiveCard(dummyCard);
-        then(player).should(times(2)).receiveCard(dummyCard);
+        then(participant).should(times(2)).receiveCard(dummyCard);
 
     }
 }

@@ -2,22 +2,22 @@ package blackjack.domain;
 
 import blackjack.domain.card.Card;
 import blackjack.domain.card.Deck;
-import blackjack.domain.player.Player;
+import blackjack.domain.player.Participant;
 
 public class BlackjackGame {
     private final Deck deck;
-    private final Player player;
+    private final Participant participant;
 
-    public BlackjackGame(Deck deck, Player player) {
+    public BlackjackGame(Deck deck, Participant participant) {
         this.deck = deck;
-        this.player = player;
+        this.participant = participant;
     }
 
     public void start() {
         Card firstCard = deck.draw();
-        player.receiveCard(firstCard);
+        participant.receiveCard(firstCard);
 
         Card secondCard = deck.draw();
-        player.receiveCard(secondCard);
+        participant.receiveCard(secondCard);
     }
 }
