@@ -1,5 +1,7 @@
 package blackjack.domain.card;
 
+import java.util.Objects;
+
 public class NumberRank implements Rank{
     private final int number;
 
@@ -22,5 +24,18 @@ public class NumberRank implements Rank{
     @Override
     public String getDisplayName() {
         return String.valueOf(number);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof NumberRank that)) {
+            return false;
+        }
+        return number == that.number;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(number);
     }
 }
