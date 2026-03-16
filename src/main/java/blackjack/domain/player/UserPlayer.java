@@ -5,22 +5,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class UserPlayer implements Participant{
-    private final List<Card> cards = new ArrayList<>();
+public class UserPlayer implements Participant {
+    private final Hand hand = new Hand();
 
     public UserPlayer() {
     }
 
     @Override
     public void receiveCard(Card card) {
-        cards.add(card);
+        hand.add(card);
     }
 
     public int getCurrentCardSize() {
-        return cards.size();
+        return hand.getSize();
     }
 
     public List<Card> getCards() {
-        return Collections.unmodifiableList(cards);
+        return hand.getCards();
     }
 }

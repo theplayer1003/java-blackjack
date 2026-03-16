@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class DealerTest {
     
     @Test
-    void receiveCard_Always_AddsTheGivenCardToCards(){
+    void receiveCard_Always_DelegatesCardStorageToHand(){
         Dealer dealer = new Dealer();
         Card targetCard = new Card(new NumberRank(2), Suit.CLOVER);
 

@@ -6,21 +6,21 @@ import java.util.Collections;
 import java.util.List;
 
 public class Dealer implements Participant {
-    private final List<Card> cards = new ArrayList<>();
+    private final Hand hand = new Hand();
 
     public Dealer() {
     }
 
     @Override
     public void receiveCard(Card card) {
-        cards.add(card);
+        hand.add(card);
     }
 
     public int getCurrentCardSize() {
-        return cards.size();
+        return hand.getSize();
     }
 
     public List<Card> getCards() {
-        return Collections.unmodifiableList(cards);
+        return hand.getCards();
     }
 }

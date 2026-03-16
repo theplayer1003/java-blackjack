@@ -26,7 +26,7 @@ class NumberRankTest {
 
     @ParameterizedTest(name = "숫자 {0} 은(는) 유효한 범위로 객체가 정상 생성된다")
     @ValueSource(ints = {2, 10})
-    void NumberRank_Create_ValidNumberRange(int number) {
+    void numberRank_Create_ValidNumberRange(int number) {
         NumberRank numberRank = new NumberRank(number);
 
         assertThat(numberRank).isNotNull();
@@ -34,7 +34,7 @@ class NumberRankTest {
 
     @ParameterizedTest(name = "숫자 {0} 은(는) 범위를 벗어나므로 예외가 발생한다")
     @ValueSource(ints = {1, 11})
-    void NumberRank_Create_InvalidNumberRange(int number) {
+    void numberRank_Create_InvalidNumberRange(int number) {
 
         assertThatThrownBy(() -> new NumberRank(number))
                 .isInstanceOf(IllegalArgumentException.class)

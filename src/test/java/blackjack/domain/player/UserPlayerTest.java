@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class UserPlayerTest {
 
     @Test
-    void receiveCard_Always_AddsTheGivenCardToCards(){
+    void receiveCard_Always_DelegatesCardStorageToHand(){
         UserPlayer userPlayer = new UserPlayer();
         Card targetCard = new Card(new NumberRank(2), Suit.CLOVER);
 
