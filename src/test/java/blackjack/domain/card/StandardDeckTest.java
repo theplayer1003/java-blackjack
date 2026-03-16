@@ -55,7 +55,7 @@ class StandardDeckTest {
         StandardDeck standardDeck = new StandardDeck(emptyCard);
 
         assertThatThrownBy(() -> standardDeck.draw())
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("덱에 더 이상 카드가 남아있지 않습니다");
     }
 }

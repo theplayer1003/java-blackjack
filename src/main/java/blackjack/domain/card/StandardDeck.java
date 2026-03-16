@@ -32,7 +32,7 @@ public class StandardDeck implements Deck {
     @Override
     public Card draw() {
         if (cards.isEmpty()) {
-            throw new IllegalArgumentException("덱에 더 이상 카드가 남아있지 않습니다");
+            throw new IllegalStateException("덱에 더 이상 카드가 남아있지 않습니다");
         }
         return cards.removeFirst();
     }
