@@ -7,13 +7,11 @@ import blackjack.domain.player.Dealer;
 import blackjack.domain.player.Participant;
 import blackjack.domain.player.UserPlayer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 public class BlackjackGameTest {
 
     @Test
-    void distributeTwoCards_Always_DecreasesDeckSizeAndIncreasesHandSize() {
+    void distributeTwoCards_Always_Delegate() {
         Dealer dealer = new Dealer();
         UserPlayer userPlayer = new UserPlayer();
         Participant[] participants = {dealer, userPlayer};
