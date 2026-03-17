@@ -1,23 +1,30 @@
 package blackjack.domain;
 
-import blackjack.domain.card.Card;
 import blackjack.domain.card.Deck;
 import blackjack.domain.player.Participant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlackjackGame {
-    private final Deck deck;
-    private final Participant participant;
+    public static final int INITIAL_DISTRIBUTION_COUNT = 2;
 
-    public BlackjackGame(Deck deck, Participant participant) {
+    private final Deck deck;
+    private final List<Participant> participants;
+
+    public BlackjackGame(Deck deck, Participant[] participants) {
         this.deck = deck;
-        this.participant = participant;
+        this.participants = new ArrayList<>(List.of(participants));
     }
 
-    public void start() {
-        Card firstCard = deck.draw();
-        participant.receiveCard(firstCard);
+    public void distributeTwoCards() {
+        for (int i = 0; i < INITIAL_DISTRIBUTION_COUNT; i++) {
+            allPlayerReceiveOneCard();
+        }
+    }
 
-        Card secondCard = deck.draw();
-        participant.receiveCard(secondCard);
+    private void allPlayerReceiveOneCard() {
+        for (Participant participant : participants) {
+            participant.receiveCard(deck.draw());
+        }
     }
 }

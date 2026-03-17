@@ -1,45 +1,29 @@
 package blackjack.domain;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import blackjack.domain.card.Card;
-import blackjack.domain.card.Deck;
-import blackjack.domain.card.NumberRank;
-import blackjack.domain.card.Suit;
+import blackjack.domain.card.StandardDeck;
+import blackjack.domain.player.Dealer;
 import blackjack.domain.player.Participant;
+import blackjack.domain.player.UserPlayer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 public class BlackjackGameTest {
 
-    @Mock
-    private Deck deck;
-
-    @Mock
-    private Participant participant;
-
-    @InjectMocks
-    private BlackjackGame blackjackGame;
-
     @Test
-    void start_DistributesTwoCardsToEachParticipant() {
-        Card dummyCard = new Card(new NumberRank(2), Suit.HEART);
-        given(deck.draw()).willReturn(dummyCard);
+    void distributeTwoCards_Always_DecreasesDeckSizeAndIncreasesHandSize() {
+        Dealer dealer = new Dealer();
+        UserPlayer userPlayer = new UserPlayer();
+        Participant[] participants = {dealer, userPlayer};
+        StandardDeck deck = new StandardDeck();
 
-        blackjackGame.start();
+        BlackjackGame blackjackGame = new BlackjackGame(deck, participants);
+        blackjackGame.distributeTwoCards();
 
-        //verify(deck, times(2)).draw();
-        then(deck).should(times(2)).draw();
-
-        //verify(player, times(2)).receiveCard(dummyCard);
-        then(participant).should(times(2)).receiveCard(dummyCard);
-
+        assertThat(deck.getCurrentSize()).isEqualTo(52 - (participants.length * 2));
+        assertThat(dealer.getCurrentCardSize()).isEqualTo(2);
+        assertThat(userPlayer.getCurrentCardSize()).isEqualTo(2);
     }
 }
