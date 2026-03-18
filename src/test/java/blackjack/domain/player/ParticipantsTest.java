@@ -2,8 +2,8 @@ package blackjack.domain.player;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import blackjack.fixture.BlackjackFixture;
 import blackjack.domain.card.StandardDeck;
+import blackjack.fixture.BlackjackFixture;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 

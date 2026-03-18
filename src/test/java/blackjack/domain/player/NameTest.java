@@ -35,7 +35,7 @@ class NameTest {
     }
 
     @Test
-    void constructor_DoesNotThrowException_NameContainsDealerInTheMiddle(){
+    void constructor_DoesNotThrowException_NameContainsDealerInTheMiddle() {
         String allowedName = "우테코_딜러_포비";
 
         Name name = new Name(allowedName);

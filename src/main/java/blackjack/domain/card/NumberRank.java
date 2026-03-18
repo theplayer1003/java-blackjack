@@ -2,7 +2,7 @@ package blackjack.domain.card;
 
 import java.util.Objects;
 
-public class NumberRank implements Rank{
+public class NumberRank implements Rank {
     private final int number;
 
     public NumberRank(int number) {

@@ -50,7 +50,7 @@ class StandardDeckTest {
     }
 
     @Test
-    void draw_DeckIsEmpty_ThenThrowException(){
+    void draw_DeckIsEmpty_ThenThrowException() {
         List<Card> emptyCard = new ArrayList<>();
         StandardDeck standardDeck = new StandardDeck(emptyCard);
 

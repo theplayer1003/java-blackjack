@@ -1,14 +1,12 @@
 package blackjack.domain.player;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
-import blackjack.fixture.BlackjackFixture;
 import blackjack.domain.card.Card;
 import blackjack.domain.card.NumberRank;
 import blackjack.domain.card.Suit;
+import blackjack.fixture.BlackjackFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -16,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class UserPlayerTest {
 
     @Test
-    void receiveCard_Always_DelegatesCardStorageToHand(){
+    void receiveCard_Always_DelegatesCardStorageToHand() {
         UserPlayer userPlayer = BlackjackFixture.createDefaultUserPlayer();
         Card targetCard = new Card(new NumberRank(2), Suit.CLOVER);
 

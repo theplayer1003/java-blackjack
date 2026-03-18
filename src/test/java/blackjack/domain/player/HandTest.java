@@ -1,8 +1,6 @@
 package blackjack.domain.player;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import blackjack.domain.card.Card;
 import blackjack.domain.card.FaceRank;
