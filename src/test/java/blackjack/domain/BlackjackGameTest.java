@@ -6,14 +6,15 @@ import blackjack.domain.card.StandardDeck;
 import blackjack.domain.player.Dealer;
 import blackjack.domain.player.Participant;
 import blackjack.domain.player.UserPlayer;
+import blackjack.fixture.BlackjackFixture;
 import org.junit.jupiter.api.Test;
 
 public class BlackjackGameTest {
 
     @Test
     void distributeTwoCards_Always_Delegate() {
-        Dealer dealer = new Dealer();
-        UserPlayer userPlayer = new UserPlayer();
+        Dealer dealer = BlackjackFixture.createDealer();
+        UserPlayer userPlayer = BlackjackFixture.createDefaultUserPlayer();
         Participant[] participants = {dealer, userPlayer};
         StandardDeck deck = new StandardDeck();
 

@@ -2,6 +2,7 @@ package blackjack.domain.player;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import blackjack.fixture.BlackjackFixture;
 import blackjack.domain.card.StandardDeck;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,8 @@ class ParticipantsTest {
 
     @Test
     void initHand_Always_DecreasesDeckSizeAndIncreasesHandSize() {
-        Dealer dealer = new Dealer();
-        UserPlayer userPlayer = new UserPlayer();
+        Dealer dealer = BlackjackFixture.createDealer();
+        UserPlayer userPlayer = BlackjackFixture.createDefaultUserPlayer();
         Participant[] participantsAry = {dealer, userPlayer};
         StandardDeck deck = new StandardDeck();
 

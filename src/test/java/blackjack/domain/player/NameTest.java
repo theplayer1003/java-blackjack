@@ -34,14 +34,6 @@ class NameTest {
                 .hasMessageContaining("이름 사이에 공백이 포함될 수 없습니다");
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"딜러", "우테코딜러", "딜러우테코"})
-    void constructor_ThrowsIllegalArgumentException_CanNotUseNameDealer(String dealer) {
-        assertThatThrownBy(() -> new Name(dealer))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("플레이어 이름에 '딜러'를 사용할 수 없습니다");
-    }
-
     @Test
     void constructor_DoesNotThrowException_NameContainsDealerInTheMiddle(){
         String allowedName = "우테코_딜러_포비";

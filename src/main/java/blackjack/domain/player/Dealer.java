@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Dealer implements Participant {
+    private final Name name;
     private final Hand hand = new Hand();
 
-    public Dealer() {
+    public Dealer(Name name) {
+        this.name = name;
     }
 
     @Override
@@ -22,5 +24,9 @@ public class Dealer implements Participant {
 
     public List<Card> getCards() {
         return hand.getCards();
+    }
+
+    public String getName() {
+        return name.name();
     }
 }
