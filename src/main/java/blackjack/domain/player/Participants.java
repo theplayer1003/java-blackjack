@@ -1,18 +1,53 @@
 package blackjack.domain.player;
 
 import blackjack.domain.card.Deck;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Participants {
     private static final int INITIAL_DISTRIBUTION_COUNT = 2;
 
-    private final List<Participant> players;
+    private final Dealer dealer;
+    private final List<UserPlayer> players;
 
-    public Participants(List<Participant> players) {
-        if (players.isEmpty()) {
-            new IllegalArgumentException("게임 참여자가 존재 하지 않습니다");
+    public Participants(Dealer dealer, List<UserPlayer> players) {
+        validateDealerNotNull(dealer);
+        validatePlayersNotEmpty(players);
+        validatePlayersSize(players);
+        validateNoDuplicateNames(players);
+
+        this.dealer = dealer;
+        this.players = new ArrayList<>(players);
+    }
+
+    private void validateDealerNotNull(Dealer dealer) {
+        if (dealer == null) {
+            throw new IllegalArgumentException("참가자들 중 딜러는 반드시 1명 존재해야 합니다");
         }
-        this.players = players;
+    }
+
+    private void validatePlayersNotEmpty(List<UserPlayer> players) {
+        if (players == null || players.isEmpty()) {
+            throw new IllegalArgumentException("플레이어는 null 이거나 비어있을 수 없습니다");
+        }
+    }
+
+    private void validatePlayersSize(List<UserPlayer> players) {
+        if (players.size() > 8) {
+            throw new IllegalArgumentException("플레이어는 최대 8명까지 참가할 수 있습니다");
+        }
+    }
+
+    private void validateNoDuplicateNames(List<UserPlayer> players) {
+        final Set<String> uniqueNames = players.stream()
+                .map(player -> player.getName().name())
+                .collect(Collectors.toSet());
+
+        if (uniqueNames.size() != players.size()) {
+            throw new IllegalArgumentException("참여자들의 이름은 중복될 수 없습니다");
+        }
     }
 
     public void initHand(Deck deck) {
@@ -22,9 +57,19 @@ public class Participants {
     }
 
     private void allPlayerReceiveOneCard(Deck deck) {
-        for (Participant participant : players) {
+        for (Participant participant : getAllParticipants()) {
             participant.receiveCard(deck.draw());
         }
     }
 
+    private List<Participant> getAllParticipants() {
+        List<Participant> all = new ArrayList<>();
+        all.add(dealer);
+        all.addAll(players);
+        return all;
+    }
+
+    public int getAllParticipantsSize() {
+        return players.size() + 1;
+    }
 }

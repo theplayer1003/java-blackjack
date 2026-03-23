@@ -33,4 +33,8 @@ public class UserPlayer implements Participant {
     public List<Card> getCards() {
         return hand.getCards();
     }
+
+    public Name getName() {
+        return name;
+    }
 }
