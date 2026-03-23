@@ -72,4 +72,10 @@ public class Participants {
     public int getAllParticipantsSize() {
         return players.size() + 1;
     }
+
+    public List<String> getPlayerNames() {
+        return players.stream()
+                .map(player -> player.getName().name())
+                .toList();
+    }
 }
