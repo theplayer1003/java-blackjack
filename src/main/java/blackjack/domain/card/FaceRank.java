@@ -23,4 +23,9 @@ public enum FaceRank implements Rank {
     public String getDisplayName() {
         return displayName;
     }
+
+    @Override
+    public boolean isAce() {
+        return this == ACE;
+    }
 }

@@ -27,6 +27,11 @@ public class NumberRank implements Rank {
     }
 
     @Override
+    public boolean isAce() {
+        return false;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof NumberRank that)) {
             return false;

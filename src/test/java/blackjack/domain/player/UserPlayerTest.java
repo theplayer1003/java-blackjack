@@ -32,4 +32,24 @@ class UserPlayerTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("플레이어 이름에 '딜러'를 사용할 수 없습니다");
     }
+
+    @Test
+    void isDrawable_ReturnTrue_CurrentScoreUnder21() {
+        UserPlayer defaultUserPlayer = BlackjackFixture.createDefaultUserPlayer();
+        defaultUserPlayer.receiveCard(new Card(new NumberRank(10), Suit.DIAMOND));
+        defaultUserPlayer.receiveCard(new Card(new NumberRank(8), Suit.DIAMOND));
+        defaultUserPlayer.receiveCard(new Card(new NumberRank(2), Suit.DIAMOND));
+
+        assertThat(defaultUserPlayer.isDrawable()).isTrue();
+    }
+
+    @Test
+    void isDrawable_ReturnFalse_CurrentScoreOver21() {
+        UserPlayer defaultUserPlayer = BlackjackFixture.createDefaultUserPlayer();
+        defaultUserPlayer.receiveCard(new Card(new NumberRank(10), Suit.DIAMOND));
+        defaultUserPlayer.receiveCard(new Card(new NumberRank(8), Suit.DIAMOND));
+        defaultUserPlayer.receiveCard(new Card(new NumberRank(3), Suit.DIAMOND));
+
+        assertThat(defaultUserPlayer.isDrawable()).isFalse();
+    }
 }

@@ -27,4 +27,13 @@ public class Dealer implements Participant {
     public String getName() {
         return name.name();
     }
+
+    @Override
+    public boolean isDrawable() {
+        return hand.calculateScore() < 17;
+    }
+
+    public Card getFirstCard() {
+        return hand.getFirstCard();
+    }
 }

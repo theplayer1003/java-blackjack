@@ -27,4 +27,19 @@ class FaceRankTest {
 
         assertThat(aceCard.getScore()).isEqualTo(11);
     }
+
+    @ParameterizedTest(name = "{0} 카드는 에이스가 아니므로 false 를 반환한다")
+    @EnumSource(value = FaceRank.class, names = {
+            "KING",
+            "QUEEN",
+            "JACK"
+    })
+    void isAce_ReturnFalse_WhenKQJ(FaceRank faceRank) {
+        assertThat(faceRank.isAce()).isFalse();
+    }
+
+    @Test
+    void isAce_ReturnTrue_WhenAce() {
+        assertThat(FaceRank.ACE.isAce()).isTrue();
+    }
 }

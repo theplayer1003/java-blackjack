@@ -19,4 +19,29 @@ public class Hand {
     public List<Card> getCards() {
         return Collections.unmodifiableList(cards);
     }
+
+    public int calculateScore() {
+        int sum = cards.stream()
+                .mapToInt(Card::getScore)
+                .sum();
+
+        long count = cards.stream()
+                .filter(Card::isAce)
+                .count();
+
+        while (sum > 21 && count > 0) {
+            sum -= 10;
+            count--;
+        }
+
+        return sum;
+    }
+
+    public boolean isBusted() {
+        return calculateScore() > 21;
+    }
+
+    public Card getFirstCard() {
+        return cards.getFirst();
+    }
 }

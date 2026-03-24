@@ -27,4 +27,22 @@ class DealerTest {
 
         assertThat(dealer.getName()).isEqualTo("딜러");
     }
+
+    @Test
+    void isDrawable_ReturnTrue_WhenScoreIs16OrUnder() {
+        Dealer dealer = BlackjackFixture.createDealer();
+        dealer.receiveCard(new Card(new NumberRank(10), Suit.DIAMOND));
+        dealer.receiveCard(new Card(new NumberRank(6), Suit.DIAMOND));
+
+        assertThat(dealer.isDrawable()).isTrue();
+    }
+
+    @Test
+    void isDrawable_ReturnFalse_WhenScoreIs170OrOver() {
+        Dealer dealer = BlackjackFixture.createDealer();
+        dealer.receiveCard(new Card(new NumberRank(10), Suit.DIAMOND));
+        dealer.receiveCard(new Card(new NumberRank(7), Suit.DIAMOND));
+
+        assertThat(dealer.isDrawable()).isFalse();
+    }
 }

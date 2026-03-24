@@ -37,4 +37,9 @@ public class UserPlayer implements Participant {
     public Name getName() {
         return name;
     }
+
+    @Override
+    public boolean isDrawable() {
+        return hand.calculateScore() < 21;
+    }
 }

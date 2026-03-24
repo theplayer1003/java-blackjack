@@ -23,6 +23,10 @@ public class Card {
         return rank.getScore();
     }
 
+    public boolean isAce() {
+        return rank.isAce();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Card card)) {
