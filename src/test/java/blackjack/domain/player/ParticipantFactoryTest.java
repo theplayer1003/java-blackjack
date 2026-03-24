@@ -1,6 +1,5 @@
 package blackjack.domain.player;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -25,10 +24,10 @@ class ParticipantFactoryTest {
     })
     void create_TrimsMarginSpaces_NamesContainLeadingOrTrailingSpaces(String nameInput) {
         Participants participants = ParticipantFactory.create(nameInput);
-        
+
         assertThat(participants.getAllParticipantsSize()).isEqualTo(3);
         assertThat(participants.getPlayerNames())
-                .containsExactly("pobi","jason");
+                .containsExactly("pobi", "jason");
     }
 
     @Test

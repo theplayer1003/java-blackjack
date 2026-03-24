@@ -23,8 +23,7 @@ class CardTest {
     @Test
     void getScore_Always_ReturnsDelegatedRankScore() {
         Card card = new Card(new NumberRank(10), Suit.HEART);
-        int anyCurrentTotalScore = 15;
 
-        assertThat(card.getScore(anyCurrentTotalScore)).isEqualTo(10);
+        assertThat(card.getScore()).isEqualTo(10);
     }
 }

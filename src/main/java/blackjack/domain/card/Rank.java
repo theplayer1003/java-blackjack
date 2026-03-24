@@ -1,7 +1,7 @@
 package blackjack.domain.card;
 
 public interface Rank {
-    int getScore(int currentTotalScore);
+    int getScore();
 
     String getDisplayName();
 }

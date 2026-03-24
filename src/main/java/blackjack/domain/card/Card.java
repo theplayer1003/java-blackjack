@@ -19,8 +19,8 @@ public class Card {
         return suit.getDisplayName();
     }
 
-    public int getScore(int currentTotalScore) {
-        return rank.getScore(currentTotalScore);
+    public int getScore() {
+        return rank.getScore();
     }
 
     @Override

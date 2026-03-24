@@ -17,7 +17,7 @@ public class NumberRank implements Rank {
     }
 
     @Override
-    public int getScore(int currentTotalScore) {
+    public int getScore() {
         return number;
     }
 

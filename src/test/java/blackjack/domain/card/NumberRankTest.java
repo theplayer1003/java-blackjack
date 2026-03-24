@@ -19,9 +19,8 @@ class NumberRankTest {
     @Test
     void getScore_Always_ReturnsItsNumber() {
         NumberRank numberRank = new NumberRank(2);
-        int currentTotalScore = 10;
 
-        assertThat(numberRank.getScore(currentTotalScore)).isEqualTo(2);
+        assertThat(numberRank.getScore()).isEqualTo(2);
     }
 
     @ParameterizedTest(name = "숫자 {0} 은(는) 유효한 범위로 객체가 정상 생성된다")
