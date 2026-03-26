@@ -1,7 +1,8 @@
 package blackjack.domain.player;
 
-import blackjack.domain.card.Deck;
+import blackjack.domain.card.Card;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,24 +51,24 @@ public class Participants {
         }
     }
 
-    public void initHand(Deck deck) {
-        for (int i = 0; i < INITIAL_DISTRIBUTION_COUNT; i++) {
-            allPlayerReceiveOneCard(deck);
-        }
-    }
-
-    private void allPlayerReceiveOneCard(Deck deck) {
-        for (Participant participant : getAllParticipants()) {
-            participant.receiveCard(deck.draw());
-        }
-    }
-
-    private List<Participant> getAllParticipants() {
-        List<Participant> all = new ArrayList<>();
-        all.add(dealer);
-        all.addAll(players);
-        return all;
-    }
+//    public void initHand(Deck deck) {
+//        for (int i = 0; i < INITIAL_DISTRIBUTION_COUNT; i++) {
+//            allPlayerReceiveOneCard(deck);
+//        }
+//    }
+//
+//    private void allPlayerReceiveOneCard(Deck deck) {
+//        for (Participant participant : getAllParticipants()) {
+//            participant.receiveCard(deck.draw());
+//        }
+//    }
+//
+//    private List<Participant> getAllParticipants() {
+//        List<Participant> all = new ArrayList<>();
+//        all.add(dealer);
+//        all.addAll(players);
+//        return all;
+//    }
 
     public int getAllParticipantsSize() {
         return players.size() + 1;
@@ -77,5 +78,28 @@ public class Participants {
         return players.stream()
                 .map(player -> player.getName().name())
                 .toList();
+    }
+
+    public boolean isDealerDrawable() {
+        return dealer.isDrawable();
+    }
+
+    public void drawDealerCard(Card card) {
+        if (!dealer.isDrawable()) {
+            throw new IllegalStateException("딜러는 17점 이상이므로 카드를 더 이상 받을 수 없습니다");
+        }
+        dealer.receiveCard(card);
+    }
+
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public List<UserPlayer> getPlayers() {
+        return Collections.unmodifiableList(players);
+    }
+
+    public void giveCardToDealer(Card drawCard) {
+        dealer.receiveCard(drawCard);
     }
 }

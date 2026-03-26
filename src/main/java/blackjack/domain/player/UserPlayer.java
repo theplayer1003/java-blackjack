@@ -23,6 +23,9 @@ public class UserPlayer implements Participant {
 
     @Override
     public void receiveCard(Card card) {
+        if (hand.isBusted()) {
+            throw new IllegalStateException("Bust 상태에서는 카드를 더 받을 수 없습니다");
+        }
         hand.add(card);
     }
 

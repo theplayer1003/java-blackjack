@@ -37,6 +37,7 @@ public class StandardDeck implements Deck {
         return cards.removeFirst();
     }
 
+    @Override
     public int getCurrentSize() {
         return cards.size();
     }

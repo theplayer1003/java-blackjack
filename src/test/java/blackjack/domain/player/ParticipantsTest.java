@@ -6,24 +6,37 @@ import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import blackjack.domain.card.Card;
+import blackjack.domain.card.Deck;
+import blackjack.domain.card.FaceRank;
+import blackjack.domain.card.NumberRank;
 import blackjack.domain.card.StandardDeck;
+import blackjack.domain.card.Suit;
+import blackjack.fixture.BlackjackFixture;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class ParticipantsTest {
 
+//    @Test
+//    void initHand_Always_DecreasesDeckSizeAndIncreasesHandSize() {
+//        Dealer dealer = createDealer();
+//        List<UserPlayer> oneUserPlayerList = of(createDefaultUserPlayer());
+//        StandardDeck deck = new StandardDeck();
+//
+//        Participants participants = new Participants(dealer, oneUserPlayerList);
+//        participants.initHand(deck);
+//
+//        assertThat(deck.getCurrentSize()).isEqualTo(52 - (participants.getAllParticipantsSize() * 2));
+//        assertThat(dealer.getCurrentCardSize()).isEqualTo(2);
+//        assertThat(oneUserPlayerList.getFirst().getCurrentCardSize()).isEqualTo(2);
+//    }
+
     @Test
-    void initHand_Always_DecreasesDeckSizeAndIncreasesHandSize() {
-        Dealer dealer = createDealer();
-        List<UserPlayer> oneUserPlayerList = of(createDefaultUserPlayer());
-        StandardDeck deck = new StandardDeck();
+    void give() {
+        Participants onePlayerParticipants = BlackjackFixture.createOnePlayerParticipants();
 
-        Participants participants = new Participants(dealer, oneUserPlayerList);
-        participants.initHand(deck);
-
-        assertThat(deck.getCurrentSize()).isEqualTo(52 - (participants.getAllParticipantsSize() * 2));
-        assertThat(dealer.getCurrentCardSize()).isEqualTo(2);
-        assertThat(oneUserPlayerList.getFirst().getCurrentCardSize()).isEqualTo(2);
+        //onePlayerParticipants.
     }
 
     @Test
@@ -72,5 +85,51 @@ class ParticipantsTest {
         )))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("참여자들의 이름은 중복될 수 없습니다");
+    }
+
+    @Test
+    void isDealerDrawable_ReturnsTrue_WhenDealerScoreIs16OrUnder() {
+        Participants participants = BlackjackFixture.createOnePlayerParticipants();
+        Dealer dealer = participants.getDealer();
+        dealer.receiveCard(new Card(FaceRank.KING, Suit.DIAMOND));
+        dealer.receiveCard(new Card(new NumberRank(6), Suit.DIAMOND));
+
+        assertThat(participants.isDealerDrawable()).isTrue();
+    }
+
+    @Test
+    void isDealerDrawable_ReturnsFalse_WhenDealerScoreIs16Over() {
+        Participants participants = BlackjackFixture.createOnePlayerParticipants();
+        Dealer dealer = participants.getDealer();
+        dealer.receiveCard(new Card(FaceRank.KING, Suit.DIAMOND));
+        dealer.receiveCard(new Card(new NumberRank(7), Suit.DIAMOND));
+
+        assertThat(participants.isDealerDrawable()).isFalse();
+    }
+
+    @Test
+    void drawDealerCard_DrawOneCard_WhenDealerisDrawable() {
+        Participants participants = BlackjackFixture.createOnePlayerParticipants();
+        Dealer dealer = participants.getDealer();
+        dealer.receiveCard(new Card(FaceRank.KING, Suit.DIAMOND));
+        dealer.receiveCard(new Card(new NumberRank(6), Suit.DIAMOND));
+        Deck deck = new StandardDeck();
+
+        participants.drawDealerCard(deck.draw());
+
+        assertThat(participants.getDealer().getCurrentCardSize()).isEqualTo(3);
+    }
+
+    @Test
+    void drawDealerCard_ThrowsISE_WhenDealerisNotDrawable() {
+        Participants participants = BlackjackFixture.createOnePlayerParticipants();
+        Dealer dealer = participants.getDealer();
+        dealer.receiveCard(new Card(FaceRank.KING, Suit.DIAMOND));
+        dealer.receiveCard(new Card(new NumberRank(7), Suit.DIAMOND));
+        Deck deck = new StandardDeck();
+
+        assertThatThrownBy(() -> participants.drawDealerCard(deck.draw()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("딜러는 17점 이상이므로 카드를 더 이상 받을 수 없습니다");
     }
 }
