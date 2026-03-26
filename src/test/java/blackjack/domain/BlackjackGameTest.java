@@ -119,4 +119,18 @@ public class BlackjackGameTest {
 
         assertThat(deck.getCurrentSize()).isEqualTo(initialDeckSize);
     }
+
+    @Test
+    void calculateGameResult_ReturnsValidGameResult_WithCurrentParticipants() {
+        Participants participants = BlackjackFixture.createOnePlayerParticipants();
+        BlackjackGame blackjackGame = new BlackjackGame(new StandardDeck(), participants);
+
+        GameResult gameResult = blackjackGame.calculateGameResult();
+
+        assertThat(gameResult).isNotNull();
+
+        assertThat(gameResult.getPlayerResults()).hasSize(1);
+
+        assertThat(gameResult.getDealerResults()).isNotNull();
+    }
 }

@@ -36,4 +36,8 @@ public class Dealer implements Participant {
     public Card getFirstCard() {
         return hand.getFirstCard();
     }
+
+    public Hand getHand() {
+        return hand;
+    }
 }

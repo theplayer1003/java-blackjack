@@ -45,4 +45,8 @@ public class UserPlayer implements Participant {
     public boolean isDrawable() {
         return hand.calculateScore() < 21;
     }
+
+    public Hand getHand() {
+        return hand;
+    }
 }

@@ -51,25 +51,6 @@ public class Participants {
         }
     }
 
-//    public void initHand(Deck deck) {
-//        for (int i = 0; i < INITIAL_DISTRIBUTION_COUNT; i++) {
-//            allPlayerReceiveOneCard(deck);
-//        }
-//    }
-//
-//    private void allPlayerReceiveOneCard(Deck deck) {
-//        for (Participant participant : getAllParticipants()) {
-//            participant.receiveCard(deck.draw());
-//        }
-//    }
-//
-//    private List<Participant> getAllParticipants() {
-//        List<Participant> all = new ArrayList<>();
-//        all.add(dealer);
-//        all.addAll(players);
-//        return all;
-//    }
-
     public int getAllParticipantsSize() {
         return players.size() + 1;
     }

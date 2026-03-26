@@ -45,4 +45,8 @@ public class BlackjackGame {
     public List<UserPlayer> getUserPlayerList() {
         return participants.getPlayers();
     }
+
+    public GameResult calculateGameResult() {
+        return new GameResult(participants);
+    }
 }
