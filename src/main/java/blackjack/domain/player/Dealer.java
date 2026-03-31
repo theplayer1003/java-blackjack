@@ -20,6 +20,7 @@ public class Dealer implements Participant {
         return hand.getSize();
     }
 
+    @Override
     public List<Card> getCards() {
         return hand.getCards();
     }

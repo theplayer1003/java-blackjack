@@ -7,6 +7,7 @@ import blackjack.domain.player.UserPlayer;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GameResult {
@@ -17,7 +18,7 @@ public class GameResult {
     }
 
     private Map<UserPlayer, WinningResult> calculateResults(Participants participants) {
-        Map<UserPlayer, WinningResult> results = new HashMap<>();
+        Map<UserPlayer, WinningResult> results = new LinkedHashMap<>();
 
         Dealer dealer = participants.getDealer();
         Hand dealerHand = dealer.getHand();

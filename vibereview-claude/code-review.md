@@ -29,6 +29,7 @@
 ### 문제 코드
 
 **UserPlayer.java**
+
 ```java
 public class UserPlayer implements Participant {
     private final Name name;
@@ -53,6 +54,7 @@ public class UserPlayer implements Participant {
 ```
 
 **Dealer.java**
+
 ```java
 public class Dealer implements Participant {
     private final Name name;
@@ -77,13 +79,17 @@ public class Dealer implements Participant {
 ```
 
 ### 문제점
-`UserPlayer`와 `Dealer`는 `name`, `hand` 필드와 `getCurrentCardSize()`, `getCards()`, `getHand()` 메서드가 완전히 동일합니다. `receiveCard()`와 `isDrawable()`만 다릅니다.
+
+`UserPlayer`와 `Dealer`는 `name`, `hand` 필드와 `getCurrentCardSize()`, `getCards()`, `getHand()` 메서드가 완전히 동일합니다.
+`receiveCard()`와 `isDrawable()`만 다릅니다.
 
 ### 근거
+
 - **오브젝트 10장 (상속과 코드 재사용)**: "두 메서드가 유사하게 보인다면 차이점을 메서드로 추출하고, 공통 부분을 부모 클래스로 올린다."
 - **Clean Code 10장 (창발성)**: "단 몇 줄이라도 중복을 제거한다. 소규모 재사용은 시스템 복잡도를 극적으로 줄여준다."
 
 ### 개선안
+
 공통 로직을 추상 클래스로 추출합니다. `receiveCard()`와 `isDrawable()`만 각 구현체에서 정의합니다.
 
 ```java
@@ -160,6 +166,7 @@ public class Dealer extends AbstractParticipant {
 ### 문제 코드
 
 **UserPlayer.java:49, Dealer.java:40**
+
 ```java
 public Hand getHand() {
     return hand;
@@ -167,6 +174,7 @@ public Hand getHand() {
 ```
 
 **GameResult.java:22-27** (사용하는 곳)
+
 ```java
 Dealer dealer = participants.getDealer();
 Hand dealerHand = dealer.getHand();
@@ -179,14 +187,18 @@ for (UserPlayer player : participants.getPlayers()) {
 ```
 
 ### 문제점
-`getHand()`를 통해 내부 가변 객체인 `Hand`를 그대로 반환합니다. `Hand`는 `add()` 메서드를 가진 가변 객체이므로, 외부에서 `player.getHand().add(card)`를 호출하면 Player의 캡슐화가 깨집니다.
+
+`getHand()`를 통해 내부 가변 객체인 `Hand`를 그대로 반환합니다. `Hand`는 `add()` 메서드를 가진 가변 객체이므로, 외부에서 `player.getHand().add(card)`를 호출하면
+Player의 캡슐화가 깨집니다.
 
 ### 근거
+
 - **Effective Java 아이템 50**: "가변 내부 객체를 반환할 때도 방어적 복사본을 반환한다."
 - **오브젝트 4장**: "getter/setter를 통해 내부 상태를 그대로 노출하면 캡슐화가 아니다."
 - **오브젝트 6장 (묻지 말고 시켜라)**: "객체의 상태를 묻는 오퍼레이션을 호출한 후 반환된 상태를 기반으로 결정을 내리지 않는다."
 
 ### 개선안
+
 `Hand`를 외부에 노출하지 않고, 참가자에게 직접 질문합니다.
 
 ```java
@@ -228,6 +240,7 @@ public static WinningResult of(Participant dealer, Participant player) {
 ### 문제 코드
 
 **GameResult.java:19-33**
+
 ```java
 private Map<UserPlayer, WinningResult> calculateResults(Participants participants) {
     Map<UserPlayer, WinningResult> results = new HashMap<>();
@@ -245,14 +258,18 @@ private Map<UserPlayer, WinningResult> calculateResults(Participants participant
 ```
 
 ### 문제점
-`GameResult`가 `Participants` → `Dealer` → `Hand` 순서로 내부 구조를 탐색합니다. 이는 전형적인 **기차 충돌(Train Wreck)** 패턴이며, `GameResult`가 `Participants`의 내부 구조에 깊이 의존하게 됩니다.
+
+`GameResult`가 `Participants` → `Dealer` → `Hand` 순서로 내부 구조를 탐색합니다. 이는 전형적인 **기차 충돌(Train Wreck)** 패턴이며, `GameResult`가
+`Participants`의 내부 구조에 깊이 의존하게 됩니다.
 
 ### 근거
+
 - **Clean Code 6장 (디미터 법칙)**: "모듈은 자신이 조작하는 객체의 내부를 몰라야 한다."
 - **오브젝트 6장 (디미터 법칙)**: "객체의 내부 구조에 강하게 결합되지 않도록 협력 경로를 제한한다."
 - **오브젝트 5장 (정보 전문가 패턴)**: "책임을 수행할 정보를 알고 있는 객체에게 책임을 할당한다."
 
 ### 개선안
+
 게임 결과 계산 책임을 `Participants`에게 위임합니다. `Participants`가 Dealer와 Player를 모두 알고 있으므로 정보 전문가입니다.
 
 ```java
@@ -289,6 +306,7 @@ public GameResult calculateGameResult() {
 ### 문제 코드
 
 **BlackjackGame.java:31-36**
+
 ```java
 public void drawDealerCard() {
     if (!participants.isDealerDrawable()) {  // ← 1차 검증
@@ -299,6 +317,7 @@ public void drawDealerCard() {
 ```
 
 **Participants.java:68-73**
+
 ```java
 public void drawDealerCard(Card card) {
     if (!dealer.isDrawable()) {              // ← 동일한 검증 반복
@@ -309,14 +328,17 @@ public void drawDealerCard(Card card) {
 ```
 
 ### 문제점
+
 동일한 검증 로직(`isDealerDrawable`)이 `BlackjackGame`과 `Participants`에서 중복됩니다. 동일한 예외 메시지도 두 곳에서 하드코딩되어 있습니다.
 
 ### 근거
+
 - **Clean Code 10장 (창발성 - DRY)**: "중복은 소프트웨어에서 모든 악의 근원이다."
 - **Clean Code 2장 (함수)**: "함수는 한 가지만 해라."
 - **오브젝트 6장 (묻지 말고 시켜라)**: "상태를 묻고 판단하는 대신, 객체에게 행동을 시켜라."
 
 ### 개선안
+
 검증 책임을 하나의 계층에만 둡니다. `BlackjackGame`은 `Participants`에게 시키고, 검증은 `Participants` (또는 `Dealer`) 내부에서만 수행합니다.
 
 ```java
@@ -350,6 +372,7 @@ public void drawUserPlayerCard(UserPlayer userPlayer) {
 ### 문제 코드
 
 **Participants.java:64-85**
+
 ```java
 public boolean isDealerDrawable() {
     return dealer.isDrawable();
@@ -368,17 +391,22 @@ public void giveCardToDealer(Card drawCard) {
 ```
 
 ### 문제점
-`Participants`는 Dealer와 Player를 **묶는 역할**이지만, Dealer에 대한 위임 메서드가 3개(`isDealerDrawable`, `drawDealerCard`, `giveCardToDealer`)나 있습니다. 이는 `Participants`가 Dealer의 프록시처럼 동작하는 것으로, `Participants`의 응집도를 낮춥니다.
+
+`Participants`는 Dealer와 Player를 **묶는 역할**이지만, Dealer에 대한 위임 메서드가 3개(`isDealerDrawable`, `drawDealerCard`,
+`giveCardToDealer`)나 있습니다. 이는 `Participants`가 Dealer의 프록시처럼 동작하는 것으로, `Participants`의 응집도를 낮춥니다.
 
 또한 `giveCardToDealer()`와 `drawDealerCard()`는 둘 다 Dealer에게 카드를 주지만 검증 여부만 다릅니다. 이름만으로는 차이가 명확하지 않습니다.
 
 ### 근거
+
 - **Clean Code 9장 (클래스 - SRP)**: "클래스나 모듈을 변경할 이유가 하나뿐이어야 한다."
 - **Clean Code 2장 (의미 있는 이름)**: "한 개념에 한 단어를 사용하라."
 - **오브젝트 4장**: "응집도가 낮으면 변경의 이유가 여러 가지가 된다."
 
 ### 개선안
-`Participants`의 역할을 명확히 합니다. 초기 배분(`distributeTwoCards`)은 `Participants`가 담당하되, 이후 턴별 카드 드로우는 `BlackjackGame`이 `Dealer`에게 직접 위임합니다.
+
+`Participants`의 역할을 명확히 합니다. 초기 배분(`distributeTwoCards`)은 `Participants`가 담당하되, 이후 턴별 카드 드로우는 `BlackjackGame`이 `Dealer`
+에게 직접 위임합니다.
 
 ```java
 public class Participants {
@@ -413,6 +441,7 @@ public void drawDealerCard() {
 ### 문제 코드
 
 **GameResult.java:53-61**
+
 ```java
 private WinningResult reverse(WinningResult playerResult) {
     if (playerResult == WinningResult.WIN) {
@@ -426,14 +455,18 @@ private WinningResult reverse(WinningResult playerResult) {
 ```
 
 ### 문제점
-`reverse()`는 `WinningResult`의 상태를 기반으로 `WinningResult`의 반대값을 결정합니다. 이 로직은 `WinningResult` 자신이 가장 잘 아는 정보입니다. `GameResult`에 두면 `WinningResult`에 새로운 상수가 추가될 때 `GameResult`도 함께 수정해야 합니다.
+
+`reverse()`는 `WinningResult`의 상태를 기반으로 `WinningResult`의 반대값을 결정합니다. 이 로직은 `WinningResult` 자신이 가장 잘 아는 정보입니다.
+`GameResult`에 두면 `WinningResult`에 새로운 상수가 추가될 때 `GameResult`도 함께 수정해야 합니다.
 
 ### 근거
+
 - **오브젝트 5장 (정보 전문가 패턴)**: "책임을 수행하는 데 필요한 정보를 가장 많이 알고 있는 객체에게 책임을 할당한다."
 - **Effective Java 아이템 34**: "열거 타입에는 임의의 메서드나 필드를 추가할 수 있다."
 - **Clean Code 6장 (객체와 자료 구조)**: "객체는 자료를 숨기고 함수를 공개한다."
 
 ### 개선안
+
 `reverse()`를 `WinningResult` enum 안으로 이동합니다.
 
 ```java
@@ -482,6 +515,7 @@ public Map<WinningResult, Integer> getDealerResults() {
 ### 문제 코드
 
 **StandardDeck.java:45-47**
+
 ```java
 public List<Card> getCards() {
     return cards;
@@ -489,14 +523,18 @@ public List<Card> getCards() {
 ```
 
 ### 문제점
-`cards`는 `draw()` 시 `removeFirst()`로 원소가 삭제되는 내부 가변 리스트입니다. 이를 외부에 그대로 반환하면 외부에서 `deck.getCards().clear()` 같은 호출로 덱을 파괴할 수 있습니다.
+
+`cards`는 `draw()` 시 `removeFirst()`로 원소가 삭제되는 내부 가변 리스트입니다. 이를 외부에 그대로 반환하면 외부에서 `deck.getCards().clear()` 같은 호출로 덱을 파괴할
+수 있습니다.
 
 ### 근거
+
 - **Effective Java 아이템 50**: "적시에 방어적 복사본을 만들라. 가변 내부 객체를 반환할 때도 방어적 복사본을 반환한다."
 - **Effective Java 아이템 17**: "자신 외에는 내부의 가변 컴포넌트에 접근할 수 없도록 한다."
 - **오브젝트 4장**: "내부 구현의 변경이 외부로 퍼져나가는 파급 효과를 최소화한다."
 
 ### 개선안
+
 이 메서드가 테스트 용도라면, 방어적 복사를 적용하거나 테스트 전용 접근 방식을 고려합니다.
 
 ```java
@@ -522,6 +560,7 @@ List<Card> getCards() {
 ### 문제 코드
 
 **ParticipantFactory.java:30-42**
+
 ```java
 private static String trim(String userInputNames) {
     return userInputNames.trim();
@@ -538,13 +577,16 @@ private static List<Name> getNames(String userInputNames) {
 ```
 
 ### 문제점
+
 `trim()`과 `getNames()` 메서드는 `create()` 메서드에서 사용되지 않습니다. 리팩토링 과정에서 스트림 방식으로 전환하면서 남은 잔재로 보입니다.
 
 ### 근거
+
 - **Clean Code 3장 (주석 - 주석으로 처리한 코드)**: "소스 코드 관리 시스템이 기억한다. 그냥 삭제하라."
 - **Clean Code 10장 (YAGNI 원칙과 클래스/메서드 수 최소화)**: "사용하지 않는 코드는 혼란을 야기한다."
 
 ### 개선안
+
 미사용 메서드를 삭제합니다.
 
 ```java
@@ -578,6 +620,7 @@ public class ParticipantFactory {
 ### 문제 코드
 
 **UserPlayer.java:46**
+
 ```java
 public boolean isDrawable() {
     return hand.calculateScore() < 21;
@@ -585,6 +628,7 @@ public boolean isDrawable() {
 ```
 
 **Dealer.java:32**
+
 ```java
 public boolean isDrawable() {
     return hand.calculateScore() < 17;
@@ -592,6 +636,7 @@ public boolean isDrawable() {
 ```
 
 **Hand.java:32**
+
 ```java
 while (sum > 21 && count > 0) {
     sum -= 10;
@@ -600,6 +645,7 @@ while (sum > 21 && count > 0) {
 ```
 
 **Hand.java:40-42**
+
 ```java
 public boolean isBusted() {
     return calculateScore() > 21;
@@ -607,14 +653,18 @@ public boolean isBusted() {
 ```
 
 ### 문제점
-`21`, `17`, `10` 등 블랙잭 규칙에서 중요한 숫자들이 코드 곳곳에 리터럴로 흩어져 있습니다. 같은 `21`이라는 숫자가 `UserPlayer`, `Hand`, `WinningResult`에서 각각 사용되고 있어 의미 파악이 어렵고, 변경 시 누락 위험이 있습니다.
+
+`21`, `17`, `10` 등 블랙잭 규칙에서 중요한 숫자들이 코드 곳곳에 리터럴로 흩어져 있습니다. 같은 `21`이라는 숫자가 `UserPlayer`, `Hand`, `WinningResult`에서 각각
+사용되고 있어 의미 파악이 어렵고, 변경 시 누락 위험이 있습니다.
 
 ### 근거
+
 - **Clean Code 1장 (의미 있는 이름)**: "검색하기 쉬운 이름을 사용하라."
 - **Effective Java 아이템 34**: "int 상수 대신 열거 타입을 사용하라. 열거 타입에는 메서드와 필드를 추가할 수 있다."
 - **오브젝트 9장 (변경 보호)**: "변화가 예상되는 불안정한 지점들을 식별하고 안정된 인터페이스를 형성한다."
 
 ### 개선안
+
 블랙잭 규칙 관련 상수를 한 곳에서 관리합니다.
 
 ```java
@@ -644,6 +694,7 @@ public boolean isBusted() {
 ### 문제 코드
 
 **UserPlayer.java:40-42**
+
 ```java
 public Name getName() {
     return name;  // Name 객체 반환
@@ -651,6 +702,7 @@ public Name getName() {
 ```
 
 **Dealer.java:27-29**
+
 ```java
 public String getName() {
     return name.name();  // String 반환
@@ -658,14 +710,18 @@ public String getName() {
 ```
 
 ### 문제점
-같은 개념(`name`)에 대해 `UserPlayer`는 `Name` 객체를, `Dealer`는 `String`을 반환합니다. 동일한 `Participant` 구현체인데 반환 타입이 다르면 다형적으로 사용하기 어렵고, 호출하는 쪽에서 타입에 따라 다르게 처리해야 합니다.
+
+같은 개념(`name`)에 대해 `UserPlayer`는 `Name` 객체를, `Dealer`는 `String`을 반환합니다. 동일한 `Participant` 구현체인데 반환 타입이 다르면 다형적으로 사용하기
+어렵고, 호출하는 쪽에서 타입에 따라 다르게 처리해야 합니다.
 
 ### 근거
+
 - **Clean Code 1장 (의미 있는 이름)**: "한 개념에 한 단어를 사용하라."
 - **Effective Java 아이템 51**: "메서드 시그니처를 신중히 설계하라."
 - **오브젝트 13장 (리스코프 치환 원칙)**: "서브타입은 기반 타입에 대해 대체 가능해야 한다."
 
 ### 개선안
+
 반환 타입을 통일합니다.
 
 ```java
@@ -692,6 +748,7 @@ public class Dealer implements Participant {
 ### 문제 코드
 
 **BlackjackGame.java:17-25**
+
 ```java
 public void distributeTwoCards() {
     participants.giveCardToDealer(deck.draw());
@@ -705,14 +762,18 @@ public void distributeTwoCards() {
 ```
 
 ### 문제점
-`BlackjackGame`이 `Participants`의 내부 구조(딜러 + 플레이어 목록)를 알고 있고, 직접 순회하면서 카드를 배분합니다. 이는 `Participants`의 캡슐화를 깨뜨립니다. 만약 참가자 구조가 변경되면 `BlackjackGame`도 함께 수정해야 합니다.
+
+`BlackjackGame`이 `Participants`의 내부 구조(딜러 + 플레이어 목록)를 알고 있고, 직접 순회하면서 카드를 배분합니다. 이는 `Participants`의 캡슐화를 깨뜨립니다. 만약 참가자
+구조가 변경되면 `BlackjackGame`도 함께 수정해야 합니다.
 
 ### 근거
+
 - **오브젝트 6장 (묻지 말고 시켜라)**: "객체에게 시키고, 객체 스스로 판단하게 한다."
 - **오브젝트 4장 (캡슐화)**: "내부 구현의 변경이 외부로 퍼져나가는 파급 효과를 최소화한다."
 - **Clean Code 6장 (디미터 법칙)**: "모듈은 자신이 조작하는 객체의 내부를 몰라야 한다."
 
 ### 개선안
+
 카드 배분 로직을 `Participants`에 위임합니다.
 
 ```java
@@ -741,6 +802,7 @@ public void distributeTwoCards() {
 ### 문제 코드
 
 **Participants.java:44-51**
+
 ```java
 private void validateNoDuplicateNames(List<UserPlayer> players) {
     final Set<String> uniqueNames = players.stream()
@@ -754,14 +816,18 @@ private void validateNoDuplicateNames(List<UserPlayer> players) {
 ```
 
 ### 문제점
+
 `player.getName().name()`으로 2단계에 걸쳐 내부 값을 꺼냅니다. `Participants`가 `UserPlayer` → `Name` → `String` 구조를 알아야 합니다.
 
 ### 근거
+
 - **오브젝트 6장 (디미터 법칙)**: "오직 인접한 이웃하고만 말하라."
 - **Clean Code 6장**: "기차 충돌을 피하라."
 
 ### 개선안
-`UserPlayer`에 이름 문자열을 반환하는 메서드를 추가하거나, `Name`이 `equals/hashCode`를 지원하므로 `Name` 레벨에서 비교합니다. (`Name`은 record이므로 `equals/hashCode`가 자동 생성됩니다.)
+
+`UserPlayer`에 이름 문자열을 반환하는 메서드를 추가하거나, `Name`이 `equals/hashCode`를 지원하므로 `Name` 레벨에서 비교합니다. (`Name`은 record이므로
+`equals/hashCode`가 자동 생성됩니다.)
 
 ```java
 private void validateNoDuplicateNames(List<UserPlayer> players) {
@@ -782,6 +848,7 @@ private void validateNoDuplicateNames(List<UserPlayer> players) {
 ### 문제 코드
 
 **StandardDeck.java:22-28** (Card 생성 부분)
+
 ```java
 for (int i = 2; i <= 10; i++) {
     cards.add(new Card(new NumberRank(i), suit));
@@ -793,14 +860,18 @@ for (FaceRank face : FaceRank.values()) {
 ```
 
 ### 문제점
-`Card`는 `Rank`와 `Suit`의 조합으로 만들어지는 값 객체이지만, `new Card(new NumberRank(i), suit)`처럼 클라이언트가 내부 구조(`NumberRank`라는 구체 클래스)를 알아야 합니다. 카드는 52장으로 고정되어 있으므로 캐싱도 가능합니다.
+
+`Card`는 `Rank`와 `Suit`의 조합으로 만들어지는 값 객체이지만, `new Card(new NumberRank(i), suit)`처럼 클라이언트가 내부 구조(`NumberRank`라는 구체 클래스)를
+알아야 합니다. 카드는 52장으로 고정되어 있으므로 캐싱도 가능합니다.
 
 ### 근거
+
 - **Effective Java 아이템 1**: "생성자 대신 정적 팩토리 메서드를 고려하라. 호출될 때마다 인스턴스를 새로 생성하지 않아도 된다."
 - **Effective Java 아이템 6**: "불필요한 객체 생성을 피하라. 불변 객체는 언제든 재사용할 수 있다."
 - **오브젝트 8장**: "new는 해롭다. 구체 클래스에 대한 결합도가 높아진다."
 
 ### 개선안
+
 `Card`에 정적 팩토리 메서드를 추가하고, 52장을 캐싱합니다.
 
 ```java
@@ -844,6 +915,7 @@ public class Card {
 ### 문제 코드
 
 **StandardDeck.java:22-24**
+
 ```java
 for (int i = 2; i <= 10; i++) {
     cards.add(new Card(new NumberRank(i), suit));
@@ -851,13 +923,17 @@ for (int i = 2; i <= 10; i++) {
 ```
 
 ### 문제점
-`new NumberRank(5)`는 매번 새 객체를 생성하지만 논리적으로 동일한 값입니다. `NumberRank`는 `equals`와 `hashCode`를 올바르게 구현한 값 객체이므로, 동일한 값에 대해 같은 인스턴스를 재사용할 수 있습니다.
+
+`new NumberRank(5)`는 매번 새 객체를 생성하지만 논리적으로 동일한 값입니다. `NumberRank`는 `equals`와 `hashCode`를 올바르게 구현한 값 객체이므로, 동일한 값에 대해 같은
+인스턴스를 재사용할 수 있습니다.
 
 ### 근거
+
 - **Effective Java 아이템 6**: "똑같은 기능의 객체를 매번 생성하기보다는 객체 하나를 재사용하는 편이 나을 때가 많다."
 - **Effective Java 아이템 1**: "정적 팩토리 메서드는 호출될 때마다 인스턴스를 새로 생성하지 않아도 된다."
 
 ### 개선안
+
 `NumberRank`에 캐싱을 적용합니다.
 
 ```java
@@ -895,30 +971,30 @@ public class NumberRank implements Rank {
 
 ### 심각도 분류
 
-| 심각도 | 항목 | 핵심 문제 |
-|-------|------|----------|
+| 심각도    | 항목         | 핵심 문제                                  |
+|--------|------------|----------------------------------------|
 | **높음** | R-02, R-03 | `getHand()`로 내부 가변 객체 노출, 묻지 말고 시켜라 위반 |
-| **높음** | R-01 | UserPlayer/Dealer 중복 코드 |
-| **높음** | R-07 | 가변 리스트 그대로 외부 노출 |
-| **중간** | R-04 | 중복 검증 로직 |
-| **중간** | R-05 | Participants의 응집도 저하 |
-| **중간** | R-06 | reverse() 책임 위치 부적절 |
-| **중간** | R-09 | 매직 넘버 산재 |
-| **중간** | R-10 | getName() 반환 타입 불일치 |
-| **중간** | R-11 | 카드 배분 로직의 캡슐화 위반 |
-| **중간** | R-12 | 디미터 법칙 위반 |
-| **낮음** | R-08 | 미사용 메서드 잔재 |
-| **낮음** | R-13 | 정적 팩토리 메서드 부재 |
-| **낮음** | R-14 | 값 객체 반복 생성 |
+| **높음** | R-01       | UserPlayer/Dealer 중복 코드                |
+| **높음** | R-07       | 가변 리스트 그대로 외부 노출                       |
+| **중간** | R-04       | 중복 검증 로직                               |
+| **중간** | R-05       | Participants의 응집도 저하                   |
+| **중간** | R-06       | reverse() 책임 위치 부적절                    |
+| **중간** | R-09       | 매직 넘버 산재                               |
+| **중간** | R-10       | getName() 반환 타입 불일치                    |
+| **중간** | R-11       | 카드 배분 로직의 캡슐화 위반                       |
+| **중간** | R-12       | 디미터 법칙 위반                              |
+| **낮음** | R-08       | 미사용 메서드 잔재                             |
+| **낮음** | R-13       | 정적 팩토리 메서드 부재                          |
+| **낮음** | R-14       | 값 객체 반복 생성                             |
 
 ### 잘 된 점
 
-| 항목 | 설명 | 근거 |
-|------|------|------|
-| **Rank 인터페이스 분리** | `NumberRank`와 `FaceRank`를 인터페이스로 추상화한 설계 | 오브젝트 9장 OCP, Effective Java 아이템 20 |
-| **Deck 인터페이스** | 테스트 시 고정 덱 주입이 가능한 구조 | Effective Java 아이템 5 의존 객체 주입 |
-| **Name record** | 불변 값 객체로 `record` 활용 | Effective Java 아이템 17 불변 클래스 |
-| **Hand.getCards()** | `Collections.unmodifiableList`로 방어적 복사 | Effective Java 아이템 50 |
-| **Ace 점수 계산** | `Hand.calculateScore()`의 에이스 처리 로직이 도메인 규칙을 정확히 반영 | 오브젝트 5장 정보 전문가 패턴 |
-| **생성자 유효성 검증** | `Name`, `NumberRank`, `Participants` 등에서 적극적인 입력 검증 | Effective Java 아이템 49 |
-| **의존 객체 주입** | `BlackjackGame`이 `Deck`과 `Participants`를 생성자로 주입받음 | Effective Java 아이템 5, 오브젝트 9장 |
+| 항목                  | 설명                                                  | 근거                                 |
+|---------------------|-----------------------------------------------------|------------------------------------|
+| **Rank 인터페이스 분리**   | `NumberRank`와 `FaceRank`를 인터페이스로 추상화한 설계            | 오브젝트 9장 OCP, Effective Java 아이템 20 |
+| **Deck 인터페이스**      | 테스트 시 고정 덱 주입이 가능한 구조                               | Effective Java 아이템 5 의존 객체 주입      |
+| **Name record**     | 불변 값 객체로 `record` 활용                                | Effective Java 아이템 17 불변 클래스       |
+| **Hand.getCards()** | `Collections.unmodifiableList`로 방어적 복사              | Effective Java 아이템 50              |
+| **Ace 점수 계산**       | `Hand.calculateScore()`의 에이스 처리 로직이 도메인 규칙을 정확히 반영  | 오브젝트 5장 정보 전문가 패턴                  |
+| **생성자 유효성 검증**      | `Name`, `NumberRank`, `Participants` 등에서 적극적인 입력 검증 | Effective Java 아이템 49              |
+| **의존 객체 주입**        | `BlackjackGame`이 `Deck`과 `Participants`를 생성자로 주입받음  | Effective Java 아이템 5, 오브젝트 9장      |
