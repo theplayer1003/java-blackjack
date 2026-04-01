@@ -1,6 +1,9 @@
 package blackjack.domain.card;
 
 public interface Rank {
+    int getScore();
+
     String getDisplayName();
-    int getScore(int currentTotal);
+
+    boolean isAce();
 }
