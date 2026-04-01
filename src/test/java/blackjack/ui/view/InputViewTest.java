@@ -1,4 +1,4 @@
-package blackjack.ui;
+package blackjack.ui.view;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

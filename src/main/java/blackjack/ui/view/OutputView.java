@@ -1,4 +1,4 @@
-package blackjack.ui;
+package blackjack.ui.view;
 
 import blackjack.ui.dto.DealerResultDto;
 import blackjack.ui.dto.FinalScoreDto;
@@ -33,7 +33,7 @@ public class OutputView {
                 .map(this::formatPlayerCards)
                 .collect(Collectors.joining("\n"));
 
-        return header + "\n" + dealerPart + "\n" + playersPart;
+        return header + "\n" + dealerPart + "\n" + playersPart + "\n";
     }
 
     public void printPlayerCards(ParticipantDto participantDto) {
@@ -68,7 +68,7 @@ public class OutputView {
                 .map(this::formatPlayerCards)
                 .collect(Collectors.joining("\n"));
 
-        return dealerPart + "\n" + playersPart;
+        return dealerPart + "\n" + playersPart + "\n";
     }
 
     String formatPlayerCards(ParticipantScoreDto participantScoreDto) {
@@ -102,5 +102,9 @@ public class OutputView {
 
     private String formatPlayerResult(PlayerResultDto playerResultDto) {
         return playerResultDto.name() + ": " + playerResultDto.result();
+    }
+
+    public void printEmptyLine() {
+        System.out.println();
     }
 }

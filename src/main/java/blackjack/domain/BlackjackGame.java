@@ -1,6 +1,7 @@
 package blackjack.domain;
 
 import blackjack.domain.card.Deck;
+import blackjack.domain.player.Dealer;
 import blackjack.domain.player.Participants;
 import blackjack.domain.player.UserPlayer;
 import java.util.List;
@@ -46,7 +47,15 @@ public class BlackjackGame {
         return participants.getPlayers();
     }
 
+    public Dealer getDealer() {
+        return participants.getDealer();
+    }
+
     public GameResult calculateGameResult() {
         return new GameResult(participants);
+    }
+
+    public Participants getParticipants() {
+        return this.participants;
     }
 }

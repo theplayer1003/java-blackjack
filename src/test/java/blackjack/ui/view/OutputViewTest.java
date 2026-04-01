@@ -1,4 +1,4 @@
-package blackjack.ui;
+package blackjack.ui.view;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +36,7 @@ class OutputViewTest {
                 new Participants(dealer, List.of(defaultUserPlayer))
         ));
 
-        assertThat(formatted).isEqualTo("딜러와 defaultName에게 2장을 나누었습니다.\n딜러: K다이아몬드\ndefaultName카드: 7다이아몬드, 6다이아몬드");
+        assertThat(formatted).isEqualTo("딜러와 defaultName에게 2장을 나누었습니다.\n딜러: K다이아몬드\ndefaultName카드: 7다이아몬드, 6다이아몬드\n");
     }
 
     @Test
@@ -77,7 +77,7 @@ class OutputViewTest {
                 new Participants(dealer, List.of(defaultUserPlayer)))
         );
 
-        assertThat(formatted).isEqualTo("딜러 카드: K다이아몬드, K다이아몬드 - 결과: 20\ndefaultName카드: 7다이아몬드, 6다이아몬드 - 결과: 13");
+        assertThat(formatted).isEqualTo("딜러 카드: K다이아몬드, K다이아몬드 - 결과: 20\ndefaultName카드: 7다이아몬드, 6다이아몬드 - 결과: 13\n");
     }
 
     @Test
