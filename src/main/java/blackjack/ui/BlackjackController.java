@@ -14,6 +14,7 @@ import blackjack.ui.dto.ParticipantDto;
 import blackjack.ui.view.InputView;
 import blackjack.ui.view.OutputView;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class BlackjackController {
     private final InputView inputView;
@@ -25,7 +26,7 @@ public class BlackjackController {
     }
 
     public void run() {
-        BlackjackGame blackjackGame = initGame();
+        BlackjackGame blackjackGame = retryOnException(this::initGame);
         outputView.printEmptyLine();
 
         blackjackGame.distributeTwoCards();
@@ -52,9 +53,13 @@ public class BlackjackController {
     }
 
     private void checkHitOrStand(UserPlayer userPlayer, BlackjackGame blackjackGame) {
-        while (userPlayer.isDrawable() && inputView.inputHitOrStand(userPlayer.getName().name())) {
-            blackjackGame.drawUserPlayerCard(userPlayer);
-            outputView.printPlayerCards(ParticipantDto.fromPlayer(userPlayer));
+        while (userPlayer.isDrawable()) {
+            boolean hitOrStand = retryOnException(() -> inputView.inputHitOrStand(userPlayer.getName().name()));
+            if (hitOrStand) {
+                blackjackGame.drawUserPlayerCard(userPlayer);
+                outputView.printPlayerCards(ParticipantDto.fromPlayer(userPlayer));
+            }
+            if (!hitOrStand) break;
         }
     }
 
@@ -79,5 +84,15 @@ public class BlackjackController {
         return userPlayerNames.stream()
                 .map(Name::new)
                 .toList();
+    }
+
+    private <T> T retryOnException(Supplier<T> action) {
+        while (true) {
+            try {
+                return action.get();
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                outputView.printErrorMessage(e.getMessage());
+            }
+        }
     }
 }
